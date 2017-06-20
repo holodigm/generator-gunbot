@@ -27,42 +27,42 @@ echo ""
 
 logMessage "(1/6) Update the base system"
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-apt-get update
+sudo apt-get update
 
 
 logMessage "(2/6) Install nodejs 7.x"
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-curl -sL https://deb.nodesource.com/setup_7.x | bash -
-apt-get -y install nodejs
+curl -sL https://deb.nodesource.com/setup_7.x | sudo -E bash - 
+sudo apt-get -y install nodejs
 
 
 logMessage "(3/6) Install tools"
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-apt-get -y install unzip
-npm install -g pm2 yo@1.8.5 generator-gunbot gunbot-monitor
+sudo apt-get -y install unzip
+sudo npm install -g pm2 yo@1.8.5 generator-gunbot gunbot-monitor
 
 
 logMessage "(4/6) Install GUNBOT"
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-wget https://github.com/GuntharDeNiro/BTCT/releases/download/${GUNBOT_GITHUB_FOLDER_NAME}/${GUNBOT_GITHUB_FILE_NAME}.zip -P /opt/
-unzip -o /opt/${GUNBOT_GITHUB_FILE_NAME}.zip -d /opt/unzip-tmp
+wget -q https://github.com/GuntharDeNiro/BTCT/releases/download/${GUNBOT_GITHUB_FOLDER_NAME}/${GUNBOT_GITHUB_FILE_NAME}.zip -P ~/
+unzip -o ~/${GUNBOT_GITHUB_FILE_NAME}.zip -d ~/unzip-tmp
 
 # create folder for the current version.
-mkdir /opt/${GUNBOT_GITHUB_FILE_NAME} -p
+mkdir ~/${GUNBOT_GITHUB_FILE_NAME} -p
 
 # Copy only the executables.
-cp /opt/unzip-tmp/gunthy-* /opt/${GUNBOT_GITHUB_FILE_NAME}
+cp ~/unzip-tmp/gunthy-* ~/${GUNBOT_GITHUB_FILE_NAME}
 
 # creates a symbolic link to the gunbot folder.
-rm /opt/gunbot > /dev/null
-ln -s /opt/${GUNBOT_GITHUB_FILE_NAME} /opt/gunbot
+rm ~/gunbot > /dev/null
+ln -s ~/${GUNBOT_GITHUB_FILE_NAME} ~/gunbot
 
 # Cleanup
-rm /opt/${GUNBOT_GITHUB_FILE_NAME}.zip
-rm -R /opt/unzip-tmp
+rm ~/${GUNBOT_GITHUB_FILE_NAME}.zip
+rm -R ~/unzip-tmp
 
 # Set rights
-chmod +x /opt/gunbot/gunthy-*
+chmod +x ~/gunbot/gunthy-*
 
 
 
@@ -70,7 +70,7 @@ logMessage "(5/6) Add GUNBOT aliases"
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 echo "" >> ~/.bashrc
 echo "# GUNBOT ALIASES" >> ~/.bashrc
-echo "alias gcd='cd /opt/gunbot'" >> ~/.bashrc
+echo "alias gcd='cd ~/gunbot'" >> ~/.bashrc
 echo "alias ginit='gcd && yo gunbot init'" >> ~/.bashrc
 echo "alias gadd='gcd && yo gunbot add'" >> ~/.bashrc
 echo "alias gl='pm2 l'" >> ~/.bashrc
@@ -83,26 +83,26 @@ echo "alias gstop='pm2 stop'" >> ~/.bashrc
 logMessage "(6/6) Init generator"
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # Create folder for yeoman.
-chmod g+rwx /root
-chmod g+rwx /opt/gunbot
+chmod g+rwx ~
+chmod g+rwx ~/gunbot
 
 # Yeoman write rights.
-mkdir /root/.config/configstore -p
-cat > /root/.config/configstore/insight-yo.json << EOM
+mkdir ~/.config/configstore -p
+cat > ~/.config/configstore/insight-yo.json << EOM
 {
         "clientId": 1337,
         "optOut": true
 }
 EOM
-chmod g+rwx /root/.config
-chmod g+rwx /root/.config/configstore
-chmod g+rw /root/.config/configstore/*
+chmod g+rwx ~/.config
+chmod g+rwx ~/.config/configstore
+chmod g+rw ~/.config/configstore/*
 
 # pm2 write rights.
-mkdir /root/.pm2 -p
-echo "1337" > /root/.pm2/touch
-chmod g+rwx /root/.pm2
-chmod g+rw /root/.pm2/*
+mkdir ~/.pm2 -p
+echo "1337" > ~/.pm2/touch
+chmod g+rwx ~/.pm2
+chmod g+rw ~/.pm2/*
 
 
 echo ""
